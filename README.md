@@ -17,9 +17,9 @@ Tokens are "deposited" to the address returned by `deriveDepositAddress()`. The 
 
 The owner of the ERC721 token may unwrap the token at any time by calling `unwrap()` with the wrapped token ID. The process can be repeated as many times as desired.
 
-The `deposit()` and `depositAndWrap()` convenience methods use an intermediary delegate contract to safely transfer tokens to their deposit addreses. Before depositing, the owner must approve the `CounterfactualTransferDelegate` at the address returned by `deriveDepositDelegateAddress()`.
+The `deposit()` and `depositAndWrap()` convenience methods use an intermediary delegate contract to safely transfer tokens to their deposit addresses. Before depositing, the owner must approve the `CounterfactualTransferDelegate` at the address returned by `deriveDepositDelegateAddress()`.
 
-The `depositAndWrap()` method uses the delegate to deposit the token to its counterfactual deposit address and mints the corresponding Cellophone token in a single transaction.
+The `depositAndWrap()` method uses the delegate to deposit the token to its counterfactual deposit address and mints the corresponding Cellophane token in a single transaction.
 
 The `deposit()` method uses the delegate to deposit the token to the counterfactual deposit address, but does not mint the corresponding wrapped Cellophane token. The wrapped token can be minted later by calling `wrap()` with the same arguments.
 
