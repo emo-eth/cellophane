@@ -22,7 +22,7 @@ contract Cellophane is ICellophane, ERC721 {
     constructor() ERC721("Cellophane", "CELL") {}
 
     function tokenURI(uint256) public pure override returns (string memory) {
-        return "https://cellophane.art";
+        return "";
     }
 
     function wrap(address tokenAddress, uint256 tokenId, address owner) public override returns (uint256) {

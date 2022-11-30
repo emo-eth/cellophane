@@ -5,7 +5,7 @@ import {ERC721} from "solmate/tokens/ERC721.sol";
 
 contract TestERC721 is ERC721("Test", "TEST") {
     function tokenURI(uint256) public pure override returns (string memory) {
-        return "https://cellophane.art";
+        return "";
     }
 
     function mint(address to, uint256 tokenId) public {
