@@ -1,9 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {CounterfactualDelegate} from "./CounterfactualDelegate.sol";
+import {CounterfactualTransferDelegate} from "./CounterfactualTransferDelegate.sol";
 import {IERC721} from "forge-std/interfaces/IERC721.sol";
 
+/**
+ * @title  CounterfactualUnwrapper
+ * @author emo.eth
+ * @notice This smart deploys a CounterfactualTransferDelegate contract to "unwrap" a Cellophane token before
+ *         self-destructing, all within its constructor. It reads the owner of the corresponding Cellophane tokenId,
+ *         preemptively grants a token approval to a CounterfactualTransferDelegate contract, and then deploys it using
+ *         the block's PREVRANDAO value as the salt. This means the resulting address is unpredictable unless the
+ *         transaction is front-run in the same block.
+ *
+ *         In case the SELFDESTRUCT opcode is no longer available, and a salt is re-used by the same owner when
+ *         wrapping via Cellophane, the CounterfactualUnwrapper also includes an unwrap() method, since Cellophane
+ *         will be unable to re-deploy the CounterfactualUnwrapper.
+ */
 contract CounterfactualUnwrapper {
     error FailedToDeployToAddress(address expected, address actual);
 
@@ -27,7 +40,8 @@ contract CounterfactualUnwrapper {
         address currentOwner = IERC721(cellophane).ownerOf(cellophaneTokenId);
         // calculate initcode
         bytes memory initCode = abi.encodePacked(
-            type(CounterfactualDelegate).creationCode, abi.encode(tokenAddress, tokenId, address(this), currentOwner)
+            type(CounterfactualTransferDelegate).creationCode,
+            abi.encode(tokenAddress, tokenId, address(this), currentOwner)
         );
         bytes32 initCodeHash = keccak256(initCode);
         address delegateAddress = address(
@@ -69,6 +83,6 @@ contract CounterfactualUnwrapper {
         }
 
         // selfdestruct while we still can :)
-        selfdestruct(payable(0));
+        selfdestruct(payable(currentOwner));
     }
 }
